@@ -52,6 +52,13 @@ async function run() {
       res.send(await volunteerCollection.insertOne(req.body));
     });
 
+    app.delete("/posts/:id", async (req, res) => {
+      const result = await volunteerCollection.deleteOne({
+        _id: new ObjectId(req.params.id),
+      });
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
