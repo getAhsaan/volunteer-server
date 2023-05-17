@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -24,6 +24,46 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
+
+    const volunteerCollection = client.db("volunteerDB").collection("event");
+
+    // search by title
+    app.get("/searchByTitle/:text", async (req, res) => {
+      const searchText = req.params.text;
+      const result = await volunteerCollection
+        .find({
+          $or: [
+            {
+              title: { $regex: searchText, $options: "i" },
+            },
+          ],
+        })
+        .toArray();
+      res.send(result);
+    });
+
+    // routes for get data
+    app.get("/posts", async (req, res) => {
+      const cursor = await volunteerCollection.find().toArray();
+      res.send(cursor);
+    });
+
+    app.post("/posts", async (req, res) => {
+      res.send(await volunteerCollection.insertOne(req.body));
+    });
+
+    // app.patch("/posts/:id", async (req, res) => {
+    //   res.send(
+    //     await volunteerCollection.updateOne(
+    //       { _id: new ObjectId(req.params.id) },
+    //       {
+    //         $set: {
+
+    //         }
+    //       }
+    //     )
+    //   );
+    // });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
