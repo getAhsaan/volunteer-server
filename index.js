@@ -52,19 +52,6 @@ async function run() {
       res.send(await volunteerCollection.insertOne(req.body));
     });
 
-    // app.patch("/posts/:id", async (req, res) => {
-    //   res.send(
-    //     await volunteerCollection.updateOne(
-    //       { _id: new ObjectId(req.params.id) },
-    //       {
-    //         $set: {
-
-    //         }
-    //       }
-    //     )
-    //   );
-    // });
-
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
